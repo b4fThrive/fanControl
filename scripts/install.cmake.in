@@ -1,0 +1,28 @@
+message("Setting fan-control group an executable permissions")
+
+execute_process(COMMAND bash -c 
+"
+if [ x`grep fan-control < /etc/group` == x ]; then
+  addgroup fan-control
+  echo 'group fan-control added'
+else
+  echo 'group fan-control already exists'
+fi
+
+if [ x`groups $ENV{USER} | grep fan-control` == x ]; then
+  useradd $ENV{USER} fan-control
+  echo \"$ENV{USER} added to fan-control group\"
+  else
+  echo \"$ENV{USER} already in fan-control group\"
+fi
+
+chown root:fan-control ${CMAKE_INSTALL_PREFIX}/bin/fanControl
+chmod 4754 ${CMAKE_INSTALL_PREFIX}/bin/fanControl
+"
+                WORKING_DIRECTORY ${BUILD_DIR}
+                OUTPUT_FILE ${LOG_DIR}/install.log
+                ERROR_FILE ${LOG_DIR}/install_error.log
+                COMMAND_ECHO NONE)
+
+message("Added user $ENV{USER} to fan-control group.")
+message("To use fan-control with other user need to add him to fan-control group.")

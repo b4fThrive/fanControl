@@ -1,0 +1,4 @@
+
+#define fanControl_VERSION_MAJOR @fanControl_VERSION_MAJOR@
+#define fanControl_VERSION_MINOR @fanControl_VERSION_MINOR@
+#define fanControl_VERSION_PATCH @fanControl_VERSION_PATCH@
