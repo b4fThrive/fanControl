@@ -1,3 +1,15 @@
+/* 
+ *  File description
+ *  
+ *  File: config_menu.h
+ *  Author: b4fThrive
+ *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
+ *  
+ *  This software is released under the MIT License.
+ *  https://opensource.org/licenses/MIT
+ *  
+ */
+
 #ifndef _CONFIG_MENU_ /* _CONFIG_MENU_ */
 #define _CONFIG_MENU_
 

@@ -1,3 +1,15 @@
+/* 
+ *  File description
+ *  
+ *  File: Sensors.cpp
+ *  Author: b4fThrive
+ *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
+ *  
+ *  This software is released under the MIT License.
+ *  https://opensource.org/licenses/MIT
+ *  
+ */
+
 #include <chrono>
 #include <ctime>
 #include <fstream>
