@@ -15,7 +15,7 @@ include(GNUInstallDirs)
 include(InstallRequiredSystemLibraries)
 
 # Options
-option(WHITHOUT_LIBS "Install without shared libs" OFF)
+option(WHITHOUT_LIBS "Install without shared libs" ON)
 option(SET_PERMS_ON_BUILD 
        "Set root owner and suid on build, needed sudo privileges on build." 
        OFF)
@@ -53,7 +53,8 @@ configure_file(${SCRIPTS_DIR}/install.cmake.in
                ${BUILD_DIR}/install.cmake)
 # Script uninstall
 configure_file(${SCRIPTS_DIR}/cmake_uninstall.cmake.in 
-               ${BUILD_DIR}/cmake_uninstall.cmake)
+               ${BUILD_DIR}/cmake_uninstall.cmake
+               IMMEDIATE @ONLY)
 
 # Executable build libraries linked on one executable file
 if(WHITHOUT_LIBS)
@@ -85,5 +86,6 @@ add_custom_target(uninstall
                   COMMAND ${cmake} -P ${BUILD_DIR}/cmake_uninstall.cmake)
 
 # install process
+install(FILES ${BUILD_DIR}/fanControl DESTINATION bin)
 install(FILES ${INCLUDE_DIR}/fanControlConfig.h DESTINATION include)
 install(SCRIPT ${BUILD_DIR}/install.cmake)
