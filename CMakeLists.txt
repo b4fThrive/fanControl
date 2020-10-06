@@ -30,6 +30,12 @@ set(SRC_FILES src/main.cpp src/config_menu.cpp src/Sensors.cpp)
 set(LIB_FILES lib/utils.cpp lib/menu.cpp)
 set(cmake ${CMAKE_COMMAND})
 
+# Default build release
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+
 make_directory(${LOG_DIR})
 
 # Generic header locations
