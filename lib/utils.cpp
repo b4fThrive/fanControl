@@ -1,5 +1,6 @@
 /* 
- *  File description
+ *  Utils header definitions
+ *  Helpfull classes and functions
  *  
  *  File: utils.cpp
  *  Author: b4fThrive

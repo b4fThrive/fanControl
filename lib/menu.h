@@ -1,5 +1,5 @@
 /* 
- *  File description
+ *  Menu class declaration
  *  
  *  File: menu.h
  *  Author: b4fThrive

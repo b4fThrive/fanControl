@@ -1,5 +1,5 @@
 /* 
- *  File description
+ *  Shell commands header definitions
  *  
  *  File: shell_commands.h
  *  Author: b4fThrive

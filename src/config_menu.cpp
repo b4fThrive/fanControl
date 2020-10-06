@@ -1,5 +1,6 @@
 /* 
- *  File description
+ *  ConfigMode class declaration
+ *  Controls config mode
  *  
  *  File: config_menu.cpp
  *  Author: b4fThrive

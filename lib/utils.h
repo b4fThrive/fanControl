@@ -1,5 +1,6 @@
 /* 
- *  File description
+ *  Utils header declarations
+ *  Helpfull classes and functions
  *  
  *  File: utils.h
  *  Author: b4fThrive

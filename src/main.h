@@ -1,5 +1,6 @@
 /* 
- *  File description
+ *  Fan control main header
+ *  Globals declarations
  *  
  *  File: main.h
  *  Author: b4fThrive

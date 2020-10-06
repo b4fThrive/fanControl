@@ -1,5 +1,5 @@
 /* 
- *  File description
+ *  Devices classes declarations.
  *  
  *  File: Sensors.cpp
  *  Author: b4fThrive

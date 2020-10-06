@@ -1,5 +1,5 @@
 /* 
- *  File description
+ *  Devices classes definitions.
  *  
  *  File: Sensors.h
  *  Author: b4fThrive

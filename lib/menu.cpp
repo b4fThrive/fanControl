@@ -1,5 +1,6 @@
 /* 
- *  File description
+ *  Menu class definition
+ *  This class helps to do console menus
  *  
  *  File: menu.cpp
  *  Author: b4fThrive

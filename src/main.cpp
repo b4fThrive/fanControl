@@ -1,5 +1,7 @@
 /* 
- *  File description
+ *  Fan control main file
+ *  This app is a wrapper to control for hwmon fans and sensors driver
+ *  It controls fan speeds based on preconfigured temperatures ranges
  *  
  *  File: main.cpp
  *  Author: b4fThrive
