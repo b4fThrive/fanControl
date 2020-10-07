@@ -1,14 +1,14 @@
-/* 
+/*
  *  Menu class definition
  *  This class helps to do console menus
- *  
+ *
  *  File: menu.cpp
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #include "menu.h"
@@ -38,8 +38,10 @@ Menu::~Menu() {}
 
 void Menu::clear() {
   menuOpts.clear();
+  separators.clear();
   opt      = 0;
   menuSize = 0;
+  sepSize  = 0;
   subtitle = "";
 }
 
@@ -48,6 +50,10 @@ void Menu::setSubtitle(string _subtitle) { subtitle = _subtitle; }
 void Menu::newOpt(string text, int nextOpt) {
   MenuOpt newOption(text, ++menuSize, nextOpt);
   menuOpts.push_back(newOption);
+}
+void Menu::newSeparator() {
+  separators.push_back(menuSize);
+  ++sepSize;
 }
 
 void Menu::printTitle() {
@@ -58,7 +64,15 @@ void Menu::printSubtitle() {
   if (subtitle != "") cout << subtitle << endl << endl;
 }
 void Menu::printOptions() {
-  for (int i = 0; i < menuSize; i++) cout << menuOpts[i].text << endl;
+  bool sepToAdd = sepSize > 0;
+  int  sepIndex = 0;
+  for (int i = 0; i < menuSize; i++) {
+    if (sepToAdd && sepIndex < sepSize && i == separators[sepIndex]) {
+      cout << endl;
+      ++sepIndex;
+    }
+    cout << menuOpts[i].text << endl;
+  }
   cout << endl;
   cout << "Select an option: ";
 }

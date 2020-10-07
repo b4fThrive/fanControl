@@ -1,13 +1,13 @@
-/* 
+/*
  *  Menu class declaration
- *  
+ *
  *  File: menu.h
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #ifndef _MENU_ /* _MENU_ */
@@ -27,9 +27,10 @@ struct MenuOpt {
 };
 
 class Menu {
-  int             opt, menuSize;
+  int             opt, menuSize, sepSize;
   string          title, subtitle;
   vector<MenuOpt> menuOpts;
+  vector<int>     separators;
 
 public:
   Menu(string = "", int = 0);
@@ -40,6 +41,7 @@ public:
   void setTitle(string);
   void setSubtitle(string);
   void newOpt(string, int);
+  void newSeparator();
 
   void printTitle();
   void printSubtitle();
