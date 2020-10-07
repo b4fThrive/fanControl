@@ -101,6 +101,7 @@ class ConfigMode {
   void exitOpt();
 
   void buildStartOpts();
+  void buildExitOpt();
   void buildEndOpts();
   void buildFanOpts();
   void buildSensorOpts();

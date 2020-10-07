@@ -1,14 +1,14 @@
-/* 
+/*
  *  ConfigMode class declaration
  *  Controls config mode
- *  
+ *
  *  File: config_menu.cpp
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #include "config_menu.h"
@@ -82,11 +82,13 @@ ConfigMode::~ConfigMode() {
   selectedFan    = nullptr;
   selectedSensor = nullptr;
 
-  for (int i = 0; i < hwmonSize; i++) HWMON_S[i] = nullptr;
-  for (int i = 0; i < SYS_DEVS->nDisks; i++) HDDTEMP_S[i] = nullptr;
-  for (int i = 0; i < SYS_DEVS->nFans; i++) FANS[i] = nullptr;
-  for (int i = 0; i < sysSensSz; i++) SENSORS[i] = nullptr;
-
+  int maxSize = max(sysSensSz, int(SYS_DEVS->nFans));
+  for (int i = 0; i < maxSize; i++) {
+    if (i < hwmonSize) HWMON_S[i] = nullptr;
+    if (i < SYS_DEVS->nDisks) HDDTEMP_S[i] = nullptr;
+    if (i < SYS_DEVS->nFans) FANS[i] = nullptr;
+    if (i < sysSensSz) SENSORS[i] = nullptr;
+  }
   HWMON_S.clear();
   HDDTEMP_S.clear();
   FANS.clear();
@@ -139,7 +141,7 @@ int ConfigMode::configMnu() {
   if (cfgMode == modify || oneConfigured)
     menu.newOpt("Save config", confirm_save_config);
 
-  exitOpt();
+  buildExitOpt();
 
   return stage = menu.printMenuAndgetOpt(stage);
 }
@@ -157,7 +159,7 @@ int ConfigMode::selectFanMnu() {
 
   buildStartOpts();
   buildFanOpts();
-  exitOpt();
+  buildExitOpt();
 
   if ((stgOpt = menu.printMenuAndgetOpt(stage)) >= indexedOpt) {
     if (stage == add_fans_menu)
@@ -178,18 +180,17 @@ int ConfigMode::configFanMnu() {
   menu.setSubtitle("Configuring fan: " + labels_str(selectedFan->getFan()));
 
   buildStartOpts();
+
   if (configuredSens < sysSensSz)
     menu.newOpt("Add a new sensor", add_sensors_menu);
   if (configuredSens > 0) {
     menu.newOpt("Edit a sensor", edit_sensors_menu);
     menu.newOpt("Delete a sensor", del_sensors_menu);
   }
-  if (oneConfigured)
-    menu.newOpt("End fan configuration",
-                is_new_fan
-                    ? confirm_add_fan
-                    : cfgMode == create ? new_config_menu : edit_config_menu);
-  exitOpt();
+  if (is_new_fan && oneConfigured)
+    menu.newOpt("End fan configuration and save it", confirm_add_fan);
+
+  buildExitOpt();
 
   return stage = menu.printMenuAndgetOpt(stage);
 }
@@ -224,7 +225,7 @@ int ConfigMode::selectSensorMnu() {
 
   buildStartOpts();
   buildSensorOpts();
-  exitOpt();
+  buildExitOpt();
 
   if ((stgOpt = menu.printMenuAndgetOpt(stage)) >= indexedOpt) {
     selectedSensor = stage == edit_sensors_menu || stage == del_sensors_menu
@@ -322,7 +323,9 @@ void ConfigMode::printFanControllerWizard(bool pause) {
   if (pause) cin.ignore().get();
 }
 
-void ConfigMode::startOpt() { menu.newOpt("Return start menu.", start_menu); }
+void ConfigMode::startOpt() {
+  menu.newOpt("Return start menu (discard changes).", start_menu);
+}
 
 void ConfigMode::returnBackOpt() {
   switch (stage) {
@@ -337,7 +340,9 @@ void ConfigMode::returnBackOpt() {
       break;
 
     case config_fan_menu:
-      if (is_new_fan) menu.newOpt("Return back add fans menu", add_fans_menu);
+      if (is_new_fan)
+        menu.newOpt("Return back add fans menu (discard changes)",
+                    add_fans_menu);
       else
         menu.newOpt("Return back edit fan menu", edit_fans_menu);
       break;
@@ -350,14 +355,23 @@ void ConfigMode::returnBackOpt() {
   }
 }
 
-void ConfigMode::exitOpt() { menu.newOpt("Exit config mode", exit_menu); }
+void ConfigMode::exitOpt() {
+  menu.newOpt("Exit config mode (discard changes)", exit_menu);
+}
 
 void ConfigMode::buildStartOpts() {
   startOpt();
   returnBackOpt();
+  menu.newSeparator();
+}
+
+void ConfigMode::buildExitOpt() {
+  menu.newSeparator();
+  exitOpt();
 }
 
 void ConfigMode::buildEndOpts() {
+  menu.newSeparator();
   returnBackOpt();
   exitOpt();
 }
@@ -391,21 +405,14 @@ void ConfigMode::buildFanOpts() {
 
 void ConfigMode::buildSensorOpts() {
   string      prefix, sufix;
-  Fan *       fan     = selectedFan ? selectedFan->getFan() : nullptr;
+  Fan *       fan     = !selectedFan ? nullptr : selectedFan->getFan();
   sensors_vp *sensors = !selectedFan ? nullptr : selectedFan->getSensors();
   int         sensSz  = !sensors ? 0 : sensors->size();
   int         type    = Sensor::abstract;
 
   if (stage == edit_sensors_menu || stage == del_sensors_menu) {
-    if (stage == edit_sensors_menu) {
-      prefix = "Modify ";
-      sufix  = " on ";
-    } else {
-      prefix = "Remove ";
-      sufix  = " on ";
-    }
-
-    sufix += labels_str(fan);
+    prefix = stage == del_sensors_menu ? "Remove " : "Modify ";
+    sufix  = " on " + labels_str(fan);
 
     for (int i = 0; i < sensSz; i++)
       menu.newOpt(prefix + labels_str((*sensors)[i]) + sufix, indexedOpt + i);
