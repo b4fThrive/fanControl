@@ -1,13 +1,13 @@
-/* 
+/*
  *  Shell commands header definitions
- *  
+ *
  *  File: shell_commands.h
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #ifndef _SHELL_COMMANDS_ /* _SHELL_COMMANDS_  prevent defined in other */
@@ -28,7 +28,6 @@
 
 #define HDDTEMP_PATH   "whereis hddtemp" E_NULL BREAK_BLANK " | grep bin"
 #define HDDTEMP_SED    " | sed -e 's/.*: //' -e 's/.C//'"
-#define HDDTEMP_GET(d) HDDTEMP_BIN + d + E_NULL HDDTEMP_SED
 
 #define DISKS         "lsblk -o NAME | grep -vE 'NAME|[0-9]'"
 #define DISK_MODEL_PF "lsblk /dev/"

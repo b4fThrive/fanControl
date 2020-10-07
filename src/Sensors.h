@@ -22,7 +22,7 @@
 using namespace std;
 using namespace utils;
 
-extern const char *HDDTEMP_BIN;
+extern const string HDDTEMP_BIN;
 
 /**
  * Sensors abstract class.

@@ -1,13 +1,13 @@
-/* 
+/*
  *  Devices classes declarations.
- *  
+ *
  *  File: Sensors.cpp
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #include <chrono>
@@ -26,7 +26,7 @@ using namespace std;
 using namespace utils;
 using namespace utils;
 
-const char *HDDTEMP_BIN = utils::ShellCommand(HDDTEMP_PATH).firsLine().c_str();
+const string HDDTEMP_BIN = utils::ShellCommand(HDDTEMP_PATH).firsLine().c_str();
 
 Sensor::Sensor(string devName, string path, string name, string label, int minT,
                int maxT, int offsetT, string cLabel, int type)
@@ -165,7 +165,8 @@ HddTempSensor::HddTempSensor(string name, int minT, int maxT, int offsetT,
     : Sensor("hddTemp", path == "" ? HDDTEMP_BIN : path, name,
              ShellCommand(DISK_MODEL(name)).firsLine(), minT, maxT, offsetT,
              cLabel, hddtemp),
-      cInput(HDDTEMP_GET(name)) {
+      cInput(path == "" ? HDDTEMP_BIN + " /dev/" + name + E_NULL HDDTEMP_SED
+                        : path + " /dev/" + name + E_NULL        HDDTEMP_SED) {
   if (cLabel == "") setCLabel(devName + "_" + label);
   readTemp();
 }
