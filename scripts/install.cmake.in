@@ -9,7 +9,9 @@ else
   echo 'group fan-control already exists'
 fi
 
-if [ x`groups $ENV{USER} | grep fan-control` == x ]; then
+user_in_group=`groups $ENV{USER} | grep fan-control | sed 's,.*fan-control.*,OK,g'`
+
+if [ x$user_in_group == x ]; then
   useradd $ENV{USER} fan-control
   echo \"$ENV{USER} added to fan-control group\"
   else
@@ -26,3 +28,15 @@ chmod 4754 ${CMAKE_INSTALL_PREFIX}/bin/fanControl
 
 message("Added user $ENV{USER} to fan-control group.")
 message("To use fan-control with other user need to add him to fan-control group.")
+
+set(HDDTEMP_PATH "${HDDTEMP_BIN}")
+
+if(NOT HDDTEMP_PATH)
+  message("hddtemp not found")
+else()
+  message("Set SUID privileges to hddtemp")
+  execute_process(COMMAND bash -c "chmod +s ${HDDTEMP_BIN}"
+                  WORKING_DIRECTORY ${BUILD_DIR}
+                  ERROR_FILE ${LOG_DIR}/hddtemp_install_error.log
+                  COMMAND_ECHO NONE)
+endif()

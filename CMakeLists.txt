@@ -30,6 +30,10 @@ set(SRC_FILES src/main.cpp src/config_menu.cpp src/Sensors.cpp)
 set(LIB_FILES lib/utils.cpp lib/menu.cpp)
 set(cmake ${CMAKE_COMMAND})
 
+execute_process(COMMAND bash -c "whereis hddtemp 2> /dev/null | sed 's, ,\\n,g' | grep bin | tail -n+1"
+                OUTPUT_VARIABLE HDDTEMP_BIN
+                COMMAND_ECHO NONE)
+
 # Default build release
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
