@@ -11,7 +11,7 @@ Only supported hwmon fans and sensors and hddtemp to read disk temperatures**
 
 ## Installation
 
-To use fanControl the user must be in the group fan-control. The installation process automatically creates the group and adds the user builder to the group.
+fanControl installs with SUID root privileges for fan-control group. It is needed to control fan speeds on the device. Also if you want to use hddtemp, it must have SUID privileges. The installation process described bellow automatically creates the group fan-control and adds the builder user to the group, then set SUID privileges to the hddtemp executable.
 
 fanControl uses CMake. To install fanControl go to the downloaded folder and run:
 
@@ -20,3 +20,7 @@ fanControl uses CMake. To install fanControl go to the downloaded folder and run
 or
 
 `cmake -S. -Bbuild && cd build && make && sudo make install`
+
+To use fanControl with some other user, it must be in the group fan-control. You can run:
+
+`sudo adduser <user> fan-control`
