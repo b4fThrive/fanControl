@@ -15,6 +15,7 @@
 #define _FAN_CONTROL_
 
 #include <iostream>
+#include <map>
 
 #include "Sensors.h"
 
@@ -41,9 +42,6 @@ void writeConfig(FanController *fanCtl); // Writes config file
  * Aplication commands
  ******************************************************************************/
 
-extern const int    COM_SIZE; // Number of commands
-extern const string COM_LIST[]; // Array of commands
-
 enum appCommands {
   eComm = -2, // Error on command
   noComm,     // No command
@@ -56,7 +54,7 @@ enum appCommands {
   version     // Show fan control app version
 };
 
-int command(string _command); // return number of appCommands
+extern map<string, int> commands;
 
 /******************************************************************************
  * Aplication commands handler

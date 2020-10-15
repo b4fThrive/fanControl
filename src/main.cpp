@@ -1,15 +1,15 @@
-/* 
+/*
  *  Fan control main file
  *  This app is a wrapper to control for hwmon fans and sensors driver
  *  It controls fan speeds based on preconfigured temperatures ranges
- *  
+ *
  *  File: main.cpp
  *  Author: b4fThrive
  *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
- *  
+ *
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
- *  
+ *
  */
 
 #include "main.h"
@@ -17,6 +17,7 @@
 #include <csignal>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sys/stat.h>
 #include <thread>
 #include <unistd.h>
@@ -50,29 +51,35 @@ FanController *fanController = nullptr; // FanController used for the service
  * Aplication commands
  ******************************************************************************/
 
-const int    COM_SIZE           = 7;
-const string COM_LIST[COM_SIZE] = {
-    "start", "stop", "restart", "status", "config", "help", "version"};
+map<string, int> commands = {{"start", start},
+                             {"stop", stop},
+                             {"restart", restart},
+                             {"status", status},
+                             {"config", config},
+                             {"help", help},
+                             {"version", version}};
 
 /******************************************************************************
  * Main
  ******************************************************************************/
 
 int main(int argc, char const *argv[]) {
-  int argument = argc == 1 ? noComm : command(string(argv[1]));
+  int command = argc == 1 ? noComm
+                          : commands.find(argv[1]) != commands.end()
+                                ? commands[argv[1]]
+                                : eComm;
 
-  if (argument <= noComm) // error at argument readed
+  if (command <= noComm) // error at argument readed
   {
-    cout << "Error: "
-         << (argument == noComm ? "Needed a command." : "Unknow command")
-         << endl
+    cerr << "Error: "
+         << (command == noComm ? "Needed a command." : "Unknow command") << endl
          << endl;
     showHelp();
 
     exit(EXIT_FAILURE);
   }
 
-  switch (argument) { // clang-format off
+  switch (command) { // clang-format off
     case restart: stopApp();
     case start  : startApp();     break;
     case stop   : stopApp();      break;
@@ -88,17 +95,6 @@ int main(int argc, char const *argv[]) {
 /******************************************************************************
  * Definitions
  ******************************************************************************/
-
-/**
- * @param  {string} arg : Application argument
- * @return {int}        : Command number from enum list
- */
-int command(string arg) {
-  for (int i = 0; i < COM_SIZE; i++)
-    if (arg == COM_LIST[i]) return i;
-
-  return eComm;
-}
 
 // Starts fanControl service
 void startApp() {
