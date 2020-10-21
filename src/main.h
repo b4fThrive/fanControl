@@ -4,7 +4,7 @@
  *  
  *  File: main.h
  *  Author: b4fThrive
- *  Copyright (c) 2020 2020 b4f.thrive@gmail.com
+ *  Copyright (c) 2020 b4f.thrive@gmail.com
  *  
  *  This software is released under the MIT License.
  *  https://opensource.org/licenses/MIT
