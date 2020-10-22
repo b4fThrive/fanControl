@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+echo "fanControl post install launched"
+
+FANCONTROL_PATH=$(whereis fanControl 2>/dev/null | sed 's, ,\n,g' | grep bin | tail -n+1)
+
+if [ "x$FANCONTROL_PATH" = "x" ]; then
+  echo "Error: Can't find fanControl binary"
+  exit 0
+fi
+
+if [ "$USER" != "root" ]; then
+  echo "Error: Need root privileges to launch post insall script"
+  exit 0
+fi
+
+echo "Adding fan-control group"
+
+if [ "x$(grep fan-control </etc/group)" = "x" ]; then
+  addgroup fan-control
+  echo '   Group fan-control added'
+else
+  echo '   Group fan-control already exists'
+fi
+
+if [ "x$SUDO_USER" != "x" ]; then
+  echo "Adding $SUDO_USER to fan-control group"
+
+  if [ "x$(groups $SUDO_USER | grep fan-control)" = "x" ]; then
+    useradd $SUDO_USER fan-control
+    echo "   $SUDO_USER added to fan-control group"
+  else
+    echo "   $SUDO_USER already in fan-control group"
+  fi
+fi
+
+echo "Checking hddtemp"
+HDDTEMP_PATH=$(whereis hddtemp 2>/dev/null | sed 's, ,\n,g' | grep bin | tail -n+1)
+
+if [ "x$HDDTEMP_PATH" = "x" ]; then
+  echo "   hddtemp not found"
+else
+  echo "   hddtemp found on $HDDTEMP_PATH"
+fi
+
+echo "Setting privileges"
+RESULT="Done"
+SET_ERR=$(chown root:fan-control $FANCONTROL_PATH 2>&1 >/dev/null)
+
+if [ "x$SET_ERR" != "x" ]; then
+  echo "   Error setting fan-control group on $FANCONTROL_PATH"
+  RESULT="Errors during the process"
+else
+  SET_ERR=$(chmod 4754 $FANCONTROL_PATH 2>&1 >/dev/null)
+  if [ "x$SET_ERR" != "x" ]; then
+    echo "   Error setting SUID permissions on $FANCONTROL_PATH"
+    RESULT="Errors during the process"
+  else
+    echo "   fanControl binary privileges setted"
+    echo "---To use fan-control with other user need to add him to fan-control group."
+  fi
+fi
+
+SET_ERR=$(chmod +s $HDDTEMP_PATH 2>&1 >/dev/null)
+if [ "x$SET_ERR" != "x" ]; then
+  echo "   Error setting SUID permissions on $FANCONTROL_PATH"
+  RESULT="Errors ocurring during the process"
+  else
+    echo "   hddtemp binary privileges setted"
+fi
+
+echo $RESULT
